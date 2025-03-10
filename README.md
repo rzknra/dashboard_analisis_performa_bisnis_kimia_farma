@@ -10,11 +10,143 @@ Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama
    - `kf_transaction_final.csv`  
    - `kf_product.csv`  
    - `kf_kantor_cabang.csv`
-   - `kf_inventory.csv` 
-3. Menjalankan query di bawah ini untuk membuat tabel baru bernama `performa_kimia_farma_2`, Tabel ini terdiri dari **17 kolom** dan **672.458 baris**.
+   - `kf_inventory.csv`
+3. Menghitung missing value pada 4 tabel dengan mengggunakan query berikut.
+```
+-- Menghitung missing value tabel kf_final_transaction
+
+SELECT
+
+COUNT(*) AS total_rows,
+
+  -- Kolom - kolom
+  COUNTIF(transaction_id IS NULL) AS transaction_id,
+  COUNTIF(date IS NULL) AS missing_date,
+  COUNTIF(branch_id IS NULL) AS missing_branch_id,
+  COUNTIF(customer_name IS NULL) AS missing_customer_name,
+  COUNTIF(product_id IS NULL) AS missing_product_id,
+  COUNTIF(price IS NULL) AS missing_price,
+  COUNTIF(discount_percentage IS NULL) AS missing_discount_percentage,
+  COUNTIF(rating IS NULL) AS missing_rating,
+
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_final_transaction`
+```
 
 ```
+-- Menghitung missing value tabel kf_inventory
+
+SELECT  
+
+COUNT(*) AS total_rows,
+
+  -- Kolom - kolom
+  COUNTIF(Inventory_ID IS NULL) AS missing_Inventory_ID,
+  COUNTIF(branch_id IS NULL) AS missing_branch_id,
+  COUNTIF(product_id IS NULL) AS missing_product_id,
+  COUNTIF(product_name IS NULL) AS missing_product_name,
+  COUNTIF(opname_stock IS NULL) AS missing_opname_stock,
+
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_inventory` 
+```
+
+```
+-- Menghitung missing value tabel kf_kantor_cabang
+
+SELECT 
+
+  COUNT(*) AS total_rows,
+
+  -- Kolom - kolom
+  COUNTIF(branch_id IS NULL) AS missing_branch_id,
+  COUNTIF(branch_category IS NULL) AS missing_branch_category,
+  COUNTIF(branch_name IS NULL) AS missing_branch_name,
+  COUNTIF(kota IS NULL) AS missing_kota,
+  COUNTIF(provinsi IS NULL) AS missing_provinsi,
+  COUNTIF(rating IS NULL) AS missing_rating,
+
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang` 
+```
+
+```
+-- Menghitung missing value tabel kf_product
+
+SELECT
+
+  COUNT(*) AS total_rows,
+
+  -- Kolom - kolom
+  COUNTIF(product_id IS NULL) AS missing_product_id,
+  COUNTIF(product_name IS NULL) AS missing_product_name,
+  COUNTIF(product_category IS NULL) AS missing_product_category,
+  COUNTIF(price IS NULL) AS misssing_price,
+
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_product` 
+```
+**Kesimpulan**: Setelah dilakukan pegecekan missing value, ditemukan bahwa empat tabel tidak mempunyai missing value.
+
+4. Mengecek data duplikat pada 4 tabel dengan menggunakan query berikut.
+```
+-- Mengecek data duplikat tabel kf_final_transaction
+
+SELECT 
+    transaction_id, date, branch_id, customer_name, product_id, 
+    price, discount_percentage, rating,
+    COUNT(*) AS duplicate_count
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_final_transaction`
+GROUP BY 
+    transaction_id, date, branch_id, customer_name, product_id, 
+    price, discount_percentage, rating
+HAVING COUNT(*) > 1
+ORDER BY duplicate_count DESC;
+```
+```
+-- Mengecek data duplikat tabel kf_inventory
+
+SELECT 
+    Inventory_ID, branch_id, product_id, product_name, opname_stock,
+    COUNT(*) AS duplicate_count
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_inventory`
+GROUP BY 
+    Inventory_ID, branch_id, product_id, product_name, opname_stock
+HAVING COUNT(*) > 1
+ORDER BY duplicate_count DESC;
+```
+
+```
+-- Mengecek data duplikat tabel kf_kator_cabang
+
+SELECT 
+    branch_id, branch_category, branch_name, kota, provinsi, rating,
+    COUNT(*) AS duplicate_count
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang`
+GROUP BY 
+    branch_id, branch_category, branch_name, kota, provinsi, rating
+HAVING COUNT(*) > 1
+ORDER BY duplicate_count DESC;
+```
+
+```
+-- Mengecek data duplikat tabel kf_product
+
+SELECT 
+    product_id, product_name, product_category, price,
+    COUNT(*) AS duplicate_count
+FROM `rakamin-kf-analytics-453103.kimia_farma.kf_product`
+GROUP BY 
+    product_id, product_name, product_category, price
+HAVING COUNT(*) > 1
+ORDER BY duplicate_count DESC;
+
+```
+**Kesimpulan:** Setalah dilakukan pengecekan data duplikat, ternyata empat tabel tersebut tidak mempunyai data duplikat. 
+
+Berdasarkan kesimpulan poin 4 dan 5, maka empat tabel tersebut telah bersih sehingga bisa digunakan untuk proses selanjutnya, yaitu penggabungan tabel.
+
+6. Menjalankan query di bawah ini untuk membuat tabel baru (hasil penggabungan tabel) bernama `performa_kimia_farma_2`, Tabel ini terdiri dari **17 kolom** dan **672.458 baris**.
+   
+```
 -- Menghitung nett sales, nett profit, dan metrik lainnya
+
 SELECT
       ft.transaction_id,
       ft.date,
