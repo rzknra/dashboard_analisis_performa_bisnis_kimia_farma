@@ -11,7 +11,7 @@ Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama
    - `kf_product.csv`  
    - `kf_kantor_cabang.csv`
    - `kf_inventory.csv`
-3. Menghitung missing value pada 4 tabel dengan mengggunakan query berikut.
+3. Menghitung **missing value** pada empat tabel tersebut dengan mengggunakan query berikut.
 ```
 -- Menghitung missing value tabel kf_final_transaction
 
@@ -84,7 +84,7 @@ FROM `rakamin-kf-analytics-453103.kimia_farma.kf_product`
 ```
 **Kesimpulan**: Setelah dilakukan pegecekan missing value, ditemukan bahwa empat tabel tidak mempunyai missing value.
 
-4. Mengecek data duplikat pada 4 tabel dengan menggunakan query berikut.
+4. Mengecek **data duplikat** pada empat tabel tersebut dengan menggunakan query berikut.
 ```
 -- Mengecek data duplikat tabel kf_final_transaction
 
