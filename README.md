@@ -276,20 +276,20 @@ Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berik
 
 ### Tren Pendapatan Bersih
 - **Temuan:** Pendapatan bersih relatif stabil dari 2020-2023 dengan sedikit fluktuasi.  
-- **Rekomendasi:** Lakukan analisis lebih lanjut untuk mengidentifikasi faktor-faktor yang mempengaruhi tren dan optimalkan strategi pertumbuhan di tahun mendatang.
+- **Rekomendasi:** Pelajari lebih dalam faktor-faktor yang mempengaruhi tren bisnis dan temukan strategi terbaik untuk meningkatkan pertumbuhan di tahun depan.
 
 ### Kontribusi Jenis Produk
 - **Temuan:** Produk dengan kontribusi tertinggi adalah *psycholeptics drugs* (17,1%) dan *psychoanaleptic drugs* (16,5%).  
-- **Rekomendasi:** Tingkatkan pemasaran dan distribusi produk dengan kontribusi besar serta evaluasi potensi peningkatan pada kategori dengan kontribusi lebih rendah.
+- **Rekomendasi:** Tingkatkan pemasaran dan distribusi produk dengan kontribusi besar serta evaluasi potensi peningkatan pada kategori dengan kontribusi lebih rendah..
 
 ### Distribusi Pendapatan dan Laba Bersih
 - **Temuan:** Jawa Barat memiliki pendapatan dan laba bersih tertinggi dibandingkan provinsi lain.  
-- **Rekomendasi:** Perkuat strategi bisnis di provinsi dengan kontribusi tinggi dan tingkatkan penetrasi pasar di wilayah dengan potensi pertumbuhan.
+- **Rekomendasi:** Tingkatkan strategi bisnis di provinsi dengan kontribusi besar dan perluas pasar di wilayah yang berpotensi berkembang.
 
 ### Performa Transaksi Berdasarkan Cabang
 - **Temuan:** Provinsi dengan transaksi terbanyak adalah Jawa Barat, Sumatera Utara, dan Jawa Tengah.  
-- **Rekomendasi:** Evaluasi efisiensi operasional cabang di provinsi dengan transaksi tinggi untuk meningkatkan profitabilitas.
+- **Rekomendasi:** Tinjau kembali efisiensi operasional cabang di provinsi dengan transaksi tinggi agar keuntungan bisa lebih maksimal.
 
-### Cabang dengan Rating Tinggi tetapi Transaksi Rendah
+### Cabang dengan Rating Tinggi, tapi Transaksi Rendah
 - **Temuan:** Beberapa cabang dengan rating 5 memiliki penilaian transaksi di bawah 4.  
-- **Rekomendasi:** Identifikasi kendala transaksi di cabang tersebut, seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, atau kendala dalam sistem layanan di kasir. Lalu lakukan perbaikan untuk meningkatkan rating transaksi.
+- **Rekomendasi:** Identifikasi kendala transaksi di cabang tersebut, seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, atau kendala dalam sistem layanan di kasir. Lalu, lakukan perbaikan untuk meningkatkan rating transaksi.
