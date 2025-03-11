@@ -1,8 +1,12 @@
 # Dashboard Analisis Performa Bisnis Kimia Farma Tahun 2020-2023
 
-Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang telah diolah dan diambil dari BigQuery. Dengan menggunakan visualisasi interaktif di Google Looker Studio,  dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
+Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang telah diolah di BigQuery. Dengan menggunakan visualisasi interaktif di Google Looker Studio,  dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
 
 ## Langkah-Langkah
+
+Langkah-langkah yang dilakukan dibagi menjadi 2, yaitu:
+- Langkah-langkah di Google BigQuery
+- Langkah-langkah di Looker Studio
 
 ### 1. Langkah-langkah di Google BigQuery  
 1. Membuat **skema** `Rakamin-KF-Analytics` dan **dataset** `kimia_farma`.  
@@ -11,7 +15,7 @@ Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama
    - `kf_product.csv`  
    - `kf_kantor_cabang.csv`
    - `kf_inventory.csv`
-3. Menghitung **missing value** pada empat tabel tersebut dengan mengggunakan query berikut.
+3. Menghitung **missing value** pada ke empat tabel tersebut dengan mengggunakan query di bawah ini. Ditemukan **kesimpulan** bahwa ke empat tabel tidak mempunyai missing value.
 ```
 -- Menghitung missing value tabel kf_final_transaction
 
@@ -82,9 +86,9 @@ SELECT
 
 FROM `rakamin-kf-analytics-453103.kimia_farma.kf_product` 
 ```
-**Kesimpulan**: Setelah dilakukan pegecekan missing value, ditemukan bahwa empat tabel tidak mempunyai missing value.
 
-4. Mengecek **data duplikat** pada empat tabel tersebut dengan menggunakan query berikut.
+
+4. Mengecek **data duplikat** pada ke empat tabel tersebut dengan menggunakan query berikut. Ditemukan **kesimpulan** bahwa ke empat tabel tidak mempunyai data duplikat.
 ```
 -- Mengecek data duplikat tabel kf_final_transaction
 
@@ -138,11 +142,10 @@ HAVING COUNT(*) > 1
 ORDER BY duplicate_count DESC;
 
 ```
-**Kesimpulan:** Setalah dilakukan pengecekan data duplikat, ternyata empat tabel tersebut tidak mempunyai data duplikat. 
 
-Berdasarkan kesimpulan poin 4 dan 5, maka empat tabel tersebut telah bersih sehingga bisa digunakan untuk proses selanjutnya, yaitu penggabungan tabel.
+**Kesimpulan:** Berdasarkan kesimpulan langkah nomor 4 dan 5, maka **ke empat tabel tersebut telah bersih** sehingga bisa digunakan untuk proses selanjutnya, yaitu **penggabungan tabel**.
 
-6. Menjalankan query di bawah ini untuk membuat tabel baru (hasil penggabungan tabel) bernama `performa_kimia_farma_2`, Tabel ini terdiri dari **17 kolom** dan **672.458 baris**.
+6. Menggabungkan tabel dengan menjalankan query dibawah ini sehingga tercipta tabel baru bernama `performa_kimia_farma_2`. Tabel ini terdiri dari **17 kolom** dan **672.458 baris**.
    
 ```
 -- Menghitung nett sales, nett profit, dan metrik lainnya
@@ -192,73 +195,101 @@ INNER JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_product` p
 INNER JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang` kc
     ON ft.branch_id = kc.branch_id
 
-```  
+```
+7. Mengecek **missing value dan data duplikat** pada tabel **performa_kimia_farma_2** dengan menjalalankan query di bawah ini. Ditemukan **kesimpulan** bahwa tabel performa_kimia_farma_2 **tidak mempunyai missing value dan data duplikat**. Oleh karena itu, tabel ini selanjutnya bisa diolah di Looker Studio untuk dijadikan dashbooard.
+```
+-- Mengecek missing value tabel peforma_kimia_farma_2
+
+SELECT 
+  COUNT(*) AS total_rows,
+
+  -- Kolom - kolom
+  COUNTIF(transaction_id IS NULL) AS missing_transaction_id,
+  COUNTIF(date IS NULL) AS missing_date,
+  COUNTIF(branch_id IS NULL) AS missing_branch_id,
+  COUNTIF(branch_name IS NULL) AS missing_branch_name,
+  COUNTIF(provinsi IS NULL) AS missing_provinsi,
+  COUNTIF(kota IS NULL) AS missing_kota,
+  COUNTIF(rating_cabang IS NULL) AS missing_rating_cabang,
+  COUNTIF(customer_name IS NULL) AS missing_customer_name,
+  COUNTIF(product_id IS NULL) AS missing_product_id,
+  COUNTIF(product_name IS NULL) AS missing_product_name,
+  COUNTIF(actual_price IS NULL) AS missing_actual_price,
+  COUNTIF(discount_percentage IS NULL) AS missing_discount_percentage,
+  COUNTIF(persentase_gross_laba IS NULL) AS missing_persentase_gross_laba,
+  COUNTIF(nett_sales IS NULL) AS missing_nett_sales,
+  COUNTIF(nett_profit IS NULL) AS missing_nett_profit,
+  COUNTIF(rating_transaksi IS NULL) AS missing_rating_transaksi,
+  
+FROM `rakamin-kf-analytics-453103.kimia_farma.performa_kimia_farma_2` 
+```
+
+```
+-- Mengecek data duplikat tabel peforma_kimia_farma_2
+
+SELECT 
+    transaction_id, date, branch_id, branch_name, provinsi, kota, 
+    rating_cabang, customer_name, product_id, product_name, 
+    actual_price, discount_percentage, persentase_gross_laba, 
+    nett_sales, nett_profit, rating_transaksi,
+    COUNT(*) AS duplicate_count
+FROM `rakamin-kf-analytics-453103.kimia_farma.performa_kimia_farma_2`
+GROUP BY 
+    transaction_id, date, branch_id, branch_name, provinsi, kota, 
+    rating_cabang, customer_name, product_id, product_name, 
+    actual_price, discount_percentage, persentase_gross_laba, 
+    nett_sales, nett_profit, rating_transaksi
+HAVING COUNT(*) > 1
+ORDER BY duplicate_count DESC;
+
+```
 
 ### 2. Langkah-langkah di Looker Studio  
-4. Membuat **canvas baru** di Looker Studio.  
-5. Menambahkan **tabel `performa_kimia_farma_2`** sebagai sumber data di Looker Studio lwae Google BigQuery.  
-6. Membuat **judul utama dashboard**.  
-7. Membuat **deskripsi dashboard** untuk menjelaskan tujuan dan isi dashboard.  
-8. Membuat **filter interaktif** untuk memudahkan eksplorasi data berdasarkan **tahun, provinsi, cabang, dan produk**.  
-9. Membuat **KPI Cards** untuk menampilkan:  
+1. Membuat **canvas baru** di Looker Studio.  
+2. Menambahkan **tabel `performa_kimia_farma_2`** sebagai sumber data di Looker Studio lwae Google BigQuery.  
+3. Membuat **judul utama dashboard**.  
+4. Membuat **deskripsi dashboard** untuk menjelaskan tujuan dan isi dashboard.  
+5. Membuat **filter interaktif** untuk memudahkan eksplorasi data berdasarkan **tahun, provinsi, cabang, dan produk**.  
+6. Membuat **KPI Cards** untuk menampilkan:  
    - **Total Pendapatan Kotor**  
    - **Pendapatan Bersih**  
    - **Laba Bersih**  
    - **Jumlah Transaksi**  
    - **Jumlah Produk**  
    - **Jumlah Cabang**  
-10. Membuat **Line Chart** untuk menampilkan **tren pendapatan bersih dari tahun 2020-2023**.  
-11. Membuat **Pivot Table with Bar Chart** untuk menampilkan:  
+7. Membuat **Line Chart** untuk menampilkan **tren pendapatan bersih dari tahun 2020-2023**.  
+8. Membuat **Pivot Table with Bar Chart** untuk menampilkan:  
      - **Top 10 pendapatan bersih cabang per provinsi**  
      - **Top 10 total transaksi cabang per provinsi**  
-12. Membuat **Donut Chart** untuk menampilkan **proporsi produk terhadap pendapatan bersih**.  
-13. Membuat **Geo Map** untuk menampilkan **total laba bersih per provinsi**.  
-14. Membuat **Pivot Table** untuk menampilkan **Top 5 cabang dengan rating tertinggi tetapi memiliki rating transaksi terendah**.
-15. Mengubah nama kolom dari **bahasa inggris ke bahasa indonesia**  
-16. Menambahkan **judul untuk setiap kartu (card) dan chart** agar lebih jelas dan informatif.  
-17. Menggunakan **kombinasi warna biru dan abu-abu** pada kartu dan chart untuk menciptakan **visualisasi yang menarik dan profesional**.
+9. Membuat **Donut Chart** untuk menampilkan **proporsi produk terhadap pendapatan bersih**.  
+10. Membuat **Geo Map** untuk menampilkan **total laba bersih per provinsi**.  
+11. Membuat **Pivot Table** untuk menampilkan **Top 5 cabang dengan rating tertinggi tetapi memiliki rating transaksi terendah**.
+12. Mengubah nama kolom dari **bahasa inggris ke bahasa indonesia**  
+13. Menambahkan **judul untuk setiap kartu (card) dan chart** agar lebih jelas dan informatif.  
+14. Menggunakan **kombinasi warna biru dan abu-abu** pada kartu dan chart untuk menciptakan **visualisasi yang menarik dan profesional**.
 
 ## Hasil
-Dihasilkan dashboard berikut ini.
-![Dashboard_Kimia_Farma (2)](https://github.com/user-attachments/assets/ac74433e-2d64-4051-a1bf-1583fb5ab32e)
+Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berikut ini.
+![Dashboard_Kimia_Farma (4)](https://github.com/user-attachments/assets/b8f5d33e-57a9-4752-9936-1cb44cc694dd)
 
-## Interpretasi 
+## Temuan Utama dan Rekomendasi 
 
-### 1. Analisis dan Temuan Utama
+### Tren Pendapatan Bersih
+- **Temuan:** Pendapatan bersih relatif stabil dari 2020-2023 dengan sedikit fluktuasi.  
+- **Rekomendasi:** Lakukan analisis lebih lanjut untuk mengidentifikasi faktor-faktor yang mempengaruhi tren dan optimalkan strategi pertumbuhan di tahun mendatang.
 
-#### **Pendapatan Bersih Stabil**  
-Pendapatan bersih Kimia Farma dari tahun 2020 hingga 2023 relatif stabil di kisaran 80 miliar rupiah per tahun. Ini menunjukkan bahwa perusahaan mampu mempertahankan performanya meskipun ada berbagai tantangan ekonomi.
+### Kontribusi Jenis Produk
+- **Temuan:** Produk dengan kontribusi tertinggi adalah *psycholeptics drugs* (17,1%) dan *psychoanaleptic drugs* (16,5%).  
+- **Rekomendasi:** Tingkatkan pemasaran dan distribusi produk dengan kontribusi besar serta evaluasi potensi peningkatan pada kategori dengan kontribusi lebih rendah.
 
-#### **Provinsi dengan Transaksi dan Pendapatan Tertinggi**  
-Jawa Barat, Sumatera Utara, Jawa Tengah, dan Jawa Timur mendominasi baik dalam jumlah transaksi maupun pendapatan bersih. Hal ini menunjukkan bahwa daerah-daerah ini memiliki potensi pasar yang besar untuk Kimia Farma.
+### Distribusi Pendapatan dan Laba Bersih
+- **Temuan:** Jawa Barat memiliki pendapatan dan laba bersih tertinggi dibandingkan provinsi lain.  
+- **Rekomendasi:** Perkuat strategi bisnis di provinsi dengan kontribusi tinggi dan tingkatkan penetrasi pasar di wilayah dengan potensi pertumbuhan.
 
-### **Top 5 Cabang dengan Rating Tertinggi tetapi Rating Transaksi Rendah**
-Beberapa cabang dengan rating pelanggan tinggi ternyata memiliki rating transaksi yang lebih rendah. Hal ini dapat disebabkan oleh faktor seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, atau kendala dalam sistem layanan di kasir.
+### Performa Transaksi Berdasarkan Cabang
+- **Temuan:** Provinsi dengan transaksi terbanyak adalah Jawa Barat, Sumatera Utara, dan Jawa Tengah.  
+- **Rekomendasi:** Evaluasi efisiensi operasional cabang di provinsi dengan transaksi tinggi untuk meningkatkan profitabilitas.
 
-#### **Proporsi Produk terhadap Pendapatan Bersih**  
-Kategori obat yang paling berkontribusi terhadap pendapatan bersih antara lain *psycholeptics drugs*, *anxiolytics*, *analgesics*, dan *antihistamines*, yang menunjukkan bahwa produk-produk ini memiliki permintaan tinggi di pasar.
-
-#### **Geo Map Profit Bersih per Provinsi**  
-Distribusi laba bersih menunjukkan bahwa beberapa provinsi memiliki profit yang jauh lebih tinggi dibandingkan yang lain. Ini bisa menjadi indikator untuk ekspansi bisnis atau optimalisasi operasional.
-
-
-### 2. Kesimpulan  
-- Kimia Farma berhasil menjaga pendapatan tetap stabil dari tahun ke tahun.  
-- Jawa Barat dan Sumatera Utara merupakan daerah dengan performa bisnis terbaik.  
-- Beberapa cabang dengan rating cabang tinggi masih mengalami rating transaksi yang rendah, menandakan potensi perbaikan pelayanan.  
-- Kategori produk tertentu mendominasi pendapatan, menunjukkan peluang untuk optimalisasi produk dan strategi pemasaran.  
-
-
-### 3. Rekomendasi  
-
-#### **Optimalisasi Cabang dengan Rating Cabang Tinggi & Rating Transaksi Rendah**  
-Perlu analisis lebih lanjut untuk memahami mengapa cabang dengan rating tinggi memiliki rating transaksi rendah. Kemungkinan penyebabnya adalah proses transaksi yang lambat, kesalahan input harga, keterbatasan metode pembayaran, atau sistem kasir yang kurang efisien. Meningkatkan efisiensi transaksi dan melatih staf dapat membantu memperbaiki rating tersebut
-
-#### **Ekspansi di Wilayah dengan Potensi Tinggi**  
-Mengalokasikan lebih banyak sumber daya ke provinsi dengan performa tinggi seperti Jawa Barat dan Sumatera Utara dapat meningkatkan pendapatan lebih lanjut.
-
-#### **Strategi Produk yang Lebih Fokus**  
-Karena kategori *psycholeptics drugs* dan *analgesics* menyumbang porsi terbesar dari pendapatan, Kimia Farma dapat mempertimbangkan untuk meningkatkan produksi dan pemasaran obat-obatan ini.
-
-#### **Diversifikasi Produk untuk Provinsi dengan Profit Rendah**  
-Provinsi dengan profit lebih rendah bisa menjadi target diversifikasi produk atau strategi promosi yang lebih agresif agar bisnis lebih merata di seluruh wilayah Indonesia.
+### Cabang dengan Rating Tinggi tetapi Transaksi Rendah
+- **Temuan:** Beberapa cabang dengan rating 5 memiliki penilaian transaksi di bawah 4.  
+- **Rekomendasi:** Identifikasi kendala transaksi di cabang tersebut, seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, atau kendala dalam sistem layanan di kasir. Lalu lakukan perbaikan untuk meningkatkan rating transaksi.
