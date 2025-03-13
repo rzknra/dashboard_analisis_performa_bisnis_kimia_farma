@@ -1,6 +1,17 @@
 # Dashboard Analisis Performa Bisnis Kimia Farma Tahun 2020-2023
 
-Dashboard ini dikembangkan untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang telah diolah di BigQuery. Dengan menggunakan visualisasi interaktif di Google Looker Studio,  dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
+## Latar Belakang
+Industri farmasi terus berkembang pesat, sehingga perusahaan seperti Kimia Farma perlu memahami tren bisnisnya secara akurat. Untuk memastikan strategi yang tepat, maka pendapatan, laba, produk, dan transaksi harus dianalisis secara mendalam. Namun, tanpa alat yang efektif, memahami pola bisnis bisa menjadi tantangan.
+Untuk menjawab tantangan tersebut, dikembangkan sebuah dashboard interaktif yang membantu Kimia Farma dalam menganalisis performa bisnisnya selama periode 2020-2023. Dashboard ini menggunakan Looker Studio dan BigQuery untuk mengolah data secara sistematis, menyajikan visualisasi yang informatif, serta mendukung pengambilan keputusan berbasis data.
+
+## Rumusan Masalah
+Agar dashboard ini benar-benar menjawab kebutuhan bisnis, dirumuskan beberapa pertanyaan utama.
+- Berapa total pendapatan kotor, pendapatan bersih, dan laba bersih yang diperoleh kimia farma pada tahun 2020-2023?
+- Berapa total transaksi, produk, dan cabang yang dipunyai kimia farma pada tahun 2020-2023? 
+- Bagaimana kontribusi masing-masing jenis produk terhadap pendapatan bersih perusahaan?
+- Bagaimana distribusi pendapatan dan laba bersih di berbagai cabang provinsi di Indonesia?
+- Bagaimana performa transaksi di berbagai cabang provinsi di Indonesia?
+- Apakah terdapat cabang yang memiliki rating cabang tinggi tetapi mempunyai rating transaksi rendah?
 
 ## Langkah-Langkah
 
@@ -246,7 +257,7 @@ ORDER BY duplicate_count DESC;
 
 ### 2. Langkah-langkah di Looker Studio  
 1. Membuat **canvas baru** di Looker Studio.  
-2. Menambahkan **tabel `performa_kimia_farma_2`** sebagai sumber data di Looker Studio lwae Google BigQuery.  
+2. Menambahkan **tabel `performa_kimia_farma_2`** sebagai sumber data di Looker Studio lewat Google BigQuery.  
 3. Membuat **judul utama dashboard**.  
 4. Membuat **deskripsi dashboard** untuk menjelaskan tujuan dan isi dashboard.  
 5. Membuat **filter interaktif** untuk memudahkan eksplorasi data berdasarkan **tahun, provinsi, cabang, dan produk**.  
@@ -272,15 +283,37 @@ ORDER BY duplicate_count DESC;
 Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berikut ini.
 ![Dashboard_Kimia_Farma (4)](https://github.com/user-attachments/assets/b8f5d33e-57a9-4752-9936-1cb44cc694dd)
 
-## Temuan Utama dan Rekomendasi 
+## Temuan Utama dan/atau Rekomendasi 
+
+### Tren Total Pendapatan Kotor, Pendapatan Bersih, Laba Beris
+- **Temuan:**
+   - Pendapatan Kotor dan Bersih
+
+     - Pendapatan kotor: 347,2 miliar
+      - Pendapatan bersih: 321,2 miliar
+      - Selisih pendapatan kotor dan bersih relatif kecil, yang menunjukkan bahwa biaya operasional dan potongan lainnya cukup terkendali.
+
+  - Laba Bersih
+
+       - Laba bersih tercatat 91,2 miliar, yang berarti margin laba bersih sekitar 28,4% dari pendapatan bersih.
+       - Ini adalah indikator profitabilitas yang cukup baik, namun perlu dievaluasi lebih lanjut apakah ada potensi peningkatan efisiensi biaya.
+
+       
+### Tren Banyak Transaksi, Produk, dan Cabang 
+- **Temuan:**
+  - Jumlah Transaksi, Produk, dan Cabang
+      - 672,5 ribu transaksi menunjukkan volume penjualan yang besar.
+      - Kimia Farma memiliki 150 jenis produk, yang bisa menjadi indikasi diversifikasi portofolio produk.
+      - Terdapat 1.700 cabang, yang menunjukkan skala operasi yang luas di berbagai wilayah.
+
 
 ### Tren Pendapatan Bersih
-- **Temuan:** Pendapatan bersih relatif stabil dari 2020-2023 dengan sedikit fluktuasi.  
+- **Temuan:** Pendapatan bersih relatif stabil (sekitar 80 miliar) dari 2020-2023 dengan sedikit fluktuasi  
 - **Rekomendasi:** Pelajari lebih dalam faktor-faktor yang mempengaruhi tren bisnis dan temukan strategi terbaik untuk meningkatkan pertumbuhan di tahun depan.
 
 ### Kontribusi Jenis Produk
-- **Temuan:** Produk dengan kontribusi tertinggi adalah *psycholeptics drugs* (17,1%) dan *psychoanaleptic drugs* (16,5%).  
-- **Rekomendasi:** Tingkatkan pemasaran dan distribusi produk dengan kontribusi besar serta evaluasi potensi peningkatan pada kategori dengan kontribusi lebih rendah..
+- **Temuan:** Produk dengan kontribusi tertinggi adalah Psycholeptics Drugs (terutama hypnotic, sedative, dan anxiolytic drugs) dengan persentase 17,1% dan 16,5%..  
+- **Rekomendasi:** Tingkatkan pemasaran dan distribusi produk dengan kontribusi besar serta evaluasi potensi peningkatan pada kategori dengan kontribusi lebih rendah.
 
 ### Distribusi Pendapatan dan Laba Bersih
 - **Temuan:** Jawa Barat memiliki pendapatan dan laba bersih tertinggi dibandingkan provinsi lain.  
@@ -292,4 +325,4 @@ Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berik
 
 ### Cabang dengan Rating Tinggi, tapi Transaksi Rendah
 - **Temuan:** Beberapa cabang dengan rating 5 memiliki penilaian transaksi di bawah 4.  
-- **Rekomendasi:** Identifikasi kendala transaksi di cabang tersebut, seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, atau kendala dalam sistem layanan di kasir. Lalu, lakukan perbaikan untuk meningkatkan rating transaksi.
+- **Rekomendasi:** Identifikasi kendala transaksi di cabang tersebut, seperti proses transaksi yang kurang efisien, keterbatasan metode pembayaran, kendala dalam sistem layanan di kasir dan lainnya.
