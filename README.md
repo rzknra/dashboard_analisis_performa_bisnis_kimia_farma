@@ -1,8 +1,12 @@
 # Dashboard Analisis Performa Bisnis Kimia Farma Tahun 2020-2023
 
+Pada proyek ini dikembangkan dashboard interaktif untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang diolah di BigQuery dan divisualisasikan di di Google Looker Studio. Dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
+
+
 ## Latar Belakang
-Industri farmasi terus berkembang pesat, sehingga perusahaan seperti Kimia Farma perlu memahami tren bisnisnya secara akurat. Untuk memastikan strategi yang tepat, maka pendapatan, laba, produk, dan transaksi harus dianalisis secara mendalam. Namun, tanpa alat yang efektif, memahami pola bisnis bisa menjadi tantangan.
-Untuk menjawab tantangan tersebut, dikembangkan sebuah dashboard interaktif yang membantu Kimia Farma dalam menganalisis performa bisnisnya selama periode 2020-2023. Dashboard ini menggunakan Looker Studio dan BigQuery untuk mengolah data secara sistematis, menyajikan visualisasi yang informatif, serta mendukung pengambilan keputusan berbasis data.
+Industri farmasi terus berkembang pesat, sehingga perusahaan seperti Kimia Farma perlu memahami tren bisnisnya secara akurat. Untuk memastikan strategi yang tepat, maka pendapatan, laba, produk, dan transaksi harus dianalisis secara mendalam. Namun, tanpa alat yang efektif, memahami pola bisnis bisa menjadi tantangan. Untuk menjawab tantangan tersebut, dikembangkan sebuah dashboard interaktif yang membantu Kimia Farma dalam menganalisis performa bisnisnya selama periode 2020-2023. 
+
+
 
 ## Rumusan Masalah
 Agar dashboard ini benar-benar menjawab kebutuhan bisnis, dirumuskan beberapa pertanyaan utama.
@@ -20,12 +24,36 @@ Langkah-langkah yang dilakukan dibagi menjadi 2, yaitu:
 - Langkah-langkah di Looker Studio
 
 ### 1. Langkah-langkah di Google BigQuery  
-1. Membuat **skema** `Rakamin-KF-Analytics` dan **dataset** `kimia_farma`.  
-2. Mengunggah **4 tabel** ke dataset `kimia_farma`, yaitu:  
-   - `kf_transaction_final.csv`  
-   - `kf_product.csv`  
-   - `kf_kantor_cabang.csv`
-   - `kf_inventory.csv`
+1. Membuat **skema** Rakamin-KF-Analytics dan **dataset** kimia_farma.  
+2. Mengunggah **4 tabel** ke dataset kimia_farma, yaitu:  
+   - kf_transaction_final.csv yang terdiri dari 8 kolom dengan tipe data string, date, integer, atau float. Berikut ini skema dan preview datanya:
+     
+     ![image](https://github.com/user-attachments/assets/037463e6-6e4f-4d86-8e8a-34553e40238e)
+     
+     ![image](https://github.com/user-attachments/assets/8e5df1dd-e112-43b8-a6bf-7c6bb19457bf)
+
+
+   - kf_inventory.csv : terdiri dari 5 kolom dengan tipe data string atau integer.Berikut ini skema dan preview datanya:
+  
+     ![image](https://github.com/user-attachments/assets/8330b730-e340-4187-b8e3-7d04167be027)
+     
+     ![image](https://github.com/user-attachments/assets/4ac164ac-6517-4c60-92e3-26773387348d)
+
+
+   - kf_kantor_cabang.csv : terdiri dari 6 kolom dengan tipe data string, integer, atau float.Berikut ini skema dan preview datanya:
+
+     ![image](https://github.com/user-attachments/assets/892c0c17-ca0d-438b-830a-3d077948a342)
+     
+     ![image](https://github.com/user-attachments/assets/f42ec215-d026-4068-bc81-8b4719fad631)
+
+  
+   - kf_product.csv : terdiri dari 5 kolom dengan tipe data string atau integer. Berikut ini skema dan preview datanya:
+     
+      ![image](https://github.com/user-attachments/assets/0ad84fd8-a2f1-4b18-b6cc-6199a9bc105a)
+     
+      ![image](https://github.com/user-attachments/assets/e7eb1581-c721-43db-9af0-254f476cb096)
+
+
 3. Menghitung **missing value** pada ke empat tabel tersebut dengan mengggunakan query di bawah ini. Ditemukan **kesimpulan** bahwa ke empat tabel tidak mempunyai missing value.
 ```
 -- Menghitung missing value tabel kf_final_transaction
@@ -156,7 +184,7 @@ ORDER BY duplicate_count DESC;
 
 **Kesimpulan:** Berdasarkan kesimpulan langkah nomor 4 dan 5, maka **ke empat tabel tersebut telah bersih** sehingga bisa digunakan untuk proses selanjutnya, yaitu **penggabungan tabel**.
 
-6. Menggabungkan tabel dengan menjalankan query dibawah ini sehingga tercipta tabel baru bernama `performa_kimia_farma_2`. Tabel ini terdiri dari **17 kolom** dan **672.458 baris**.
+6. Menggabungkan tabel dengan menjalankan query dibawah ini sehingga tercipta tabel baru bernama `performa_kimia_farma_2`. Tabel ini terdiri dari **17 kolom** dan **672.458 baris**. Beikut ini, query, skema, dan priview data tabel.
    
 ```
 -- Menghitung nett sales, nett profit, dan metrik lainnya
@@ -207,6 +235,17 @@ INNER JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang` kc
     ON ft.branch_id = kc.branch_id
 
 ```
+
+![image](https://github.com/user-attachments/assets/035e0307-18dd-408c-ace9-51acae282324)
+
+![performa kimia farma 2_1](https://github.com/user-attachments/assets/5eac3855-5bf4-41eb-9d3a-0f3c4aedb11c)
+
+![performa kimia farma 2_2](https://github.com/user-attachments/assets/60848573-57a2-4d27-8e81-fa5d615b22fb)
+
+![performa kimia farma 2_3](https://github.com/user-attachments/assets/8535b371-1f5f-452d-85c5-c95f5661e94f)
+
+
+
 7. Mengecek **missing value dan data duplikat** pada tabel **performa_kimia_farma_2** dengan menjalalankan query di bawah ini. Ditemukan **kesimpulan** bahwa tabel performa_kimia_farma_2 **tidak mempunyai missing value dan data duplikat**. Oleh karena itu, tabel ini selanjutnya bisa diolah di Looker Studio untuk dijadikan dashbooard.
 ```
 -- Mengecek missing value tabel peforma_kimia_farma_2
