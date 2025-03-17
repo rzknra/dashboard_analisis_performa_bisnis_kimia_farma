@@ -1,6 +1,6 @@
 # Dashboard Analisis Performa Bisnis Kimia Farma Tahun 2020-2023
 
-Pada proyek ini dikembangkan dashboard interaktif untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang diolah di BigQuery dan divisualisasikan di di Google Looker Studio. Dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
+Pada proyek ini dikembangkan dashboard interaktif untuk menganalisis performa bisnis Kimia Farma selama periode 2020-2023 dengan memanfaatkan data yang diolah di BigQuery dan divisualisasikan di Google Looker Studio. Dashboard ini memungkinkan pengguna untuk memahami berbagai aspek kinerja perusahaan secara lebih mendalam.
 
 
 ## Latar Belakang
