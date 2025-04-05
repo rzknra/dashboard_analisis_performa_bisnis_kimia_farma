@@ -184,71 +184,79 @@ ORDER BY duplicate_count DESC;
 
 **Kesimpulan:** Berdasarkan kesimpulan langkah nomor 4 dan 5, maka **ke empat tabel tersebut telah bersih** sehingga bisa digunakan untuk proses selanjutnya, yaitu **penggabungan tabel**.
 
-6. Menggabungkan tabel dengan menjalankan query dibawah ini sehingga tercipta tabel baru bernama `performa_kimia_farma_2`. Tabel ini terdiri dari **17 kolom** dan **672.458 baris**. Beikut ini, query, skema, dan priview data tabel.
+6. Menggabungkan tabel dengan menjalankan query dibawah ini sehingga tercipta tabel baru bernama `performa_kimia_farma_final`. Tabel ini terdiri dari **17 kolom** dan **672.458 baris**. Beikut ini, query, skema, dan preview data tabel.
    
 ```
--- Menghitung nett sales, nett profit, dan metrik lainnya
-
+-- Menghitung nett sales, nett profit, dan metrik lainnnya
 SELECT
-      ft.transaction_id,
-      ft.date,
-      kc.branch_id,
-      kc.branch_name,
-      kc.provinsi,
-      kc.kota,
-      kc.rating AS rating_cabang,
-      ft.customer_name,
-      ft.product_id,
-      p.product_name,
-      ft.price AS actual_price,
-      ft.discount_percentage,
+  -- Informasi transaksi
+  ft.transaction_id,
+  ft.date,
+  ft.customer_name,
+  ft.rating AS rating_transaksi,
 
-      -- Menentukan persentase_gross_laba berdasarkan harga obat
-      CASE 
-        WHEN ft.price <= 50000 THEN 0.10
-        WHEN ft.price > 50000 AND ft.price <= 100000 THEN 0.15
-        WHEN ft.price > 100000 AND ft.price <= 300000 THEN 0.20
-        WHEN ft.price > 300000 AND ft.price <= 500000 THEN 0.25
-        ELSE 0.30
-      END AS persentase_gross_laba,
+  -- Informasi produk
+  ft.product_id,
+  p.product_name,
+  p.price AS actual_price,
+  ft.discount_percentage,
 
-      -- Menghitung nate_sales (harga setelah diskon)
-      ft.price * (1 - ft.discount_percentage) AS nett_sales,
+  -- Informasi cabang
+  kc.branch_id,
+  kc.branch_name,
+  kc.provinsi,
+  kc.kota,
+  kc.rating AS rating_cabang,
 
-      -- Menghitung nett profit 
-      (ft.price * (1 - ft.discount_percentage)) * 
-      CASE 
-          WHEN ft.price <= 50000 THEN 0.10
-          WHEN ft.price > 50000 AND ft.price <= 100000 THEN 0.15
-          WHEN ft.price > 100000 AND ft.price <= 300000 THEN 0.20
-          WHEN ft.price > 300000 AND ft.price <= 500000 THEN 0.25
-          ELSE 0.30
-      END AS nett_profit,     
+  -- Harga setelah diskon (nett sales)
+  (p.price * (1 - ft.discount_percentage)) AS nett_sales,
 
-      ft.rating AS rating_transaksi, 
+  -- Persentase laba kotor (gross profit) berdasarkan rentang harga
+  CASE 
+    WHEN p.price <= 50000 THEN 0.10
+    WHEN p.price > 50000 AND p.price <= 100000 THEN 0.15
+    WHEN p.price > 100000 AND p.price <= 300000 THEN 0.20
+    WHEN p.price > 300000 AND p.price <= 500000 THEN 0.25
+    ELSE 0.30
+  END AS gross_profit_percentage,
 
--- Melakukan join tabel 
+  -- Laba bersih (nett profit), yaitu:
+  -- (gross_profit_percentage * nett_sales) - (potongan harga karena diskon)
+  (
+    -- Hitung laba kotor dari harga setelah diskon
+    (CASE 
+      WHEN p.price <= 50000 THEN 0.10
+      WHEN p.price > 50000 AND p.price <= 100000 THEN 0.15
+      WHEN p.price > 100000 AND p.price <= 300000 THEN 0.20
+      WHEN p.price > 300000 AND p.price <= 500000 THEN 0.25
+      ELSE 0.30
+    END * (p.price * (1 - ft.discount_percentage)))
+    
+    -- Dikurangi selisih harga karena diskon
+    - (p.price - (p.price * (1 - ft.discount_percentage)))
+  ) AS nett_profit
+
+-- Gabungkan data transaksi, produk, dan kantor cabang
 FROM `rakamin-kf-analytics-453103.kimia_farma.kf_final_transaction` ft
-INNER JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_product` p
-    ON ft.product_id = p.product_id
-INNER JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang` kc
-    ON ft.branch_id = kc.branch_id
+JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_product` p
+  ON ft.product_id = p.product_id
+JOIN `rakamin-kf-analytics-453103.kimia_farma.kf_kantor_cabang` kc
+  ON ft.branch_id = kc.branch_id;
 
 ```
 
-![image](https://github.com/user-attachments/assets/035e0307-18dd-408c-ace9-51acae282324)
+![image](https://github.com/user-attachments/assets/75c63f65-3232-474a-8eb0-35f093cacc9a)
 
-![performa kimia farma 2_1](https://github.com/user-attachments/assets/5eac3855-5bf4-41eb-9d3a-0f3c4aedb11c)
+![image](https://github.com/user-attachments/assets/b2027eac-7b30-4867-bbd2-b3fca87caed1)
 
-![performa kimia farma 2_2](https://github.com/user-attachments/assets/60848573-57a2-4d27-8e81-fa5d615b22fb)
+![image](https://github.com/user-attachments/assets/e1ed9073-8631-4fbe-b5cd-ad03fd250f6d)
 
-![performa kimia farma 2_3](https://github.com/user-attachments/assets/8535b371-1f5f-452d-85c5-c95f5661e94f)
+![image](https://github.com/user-attachments/assets/5721bd4d-1210-4c3c-9326-38cad5ca23dc)
 
 
-
-7. Mengecek **missing value dan data duplikat** pada tabel **performa_kimia_farma_2** dengan menjalalankan query di bawah ini. Ditemukan **kesimpulan** bahwa tabel performa_kimia_farma_2 **tidak mempunyai missing value dan data duplikat**. Oleh karena itu, tabel ini selanjutnya bisa diolah di Looker Studio untuk dijadikan dashbooard.
+7. Mengecek **missing value dan data duplikat** pada tabel **performa_kimia_farma_final** dengan menjalalankan query di bawah ini. Ditemukan **kesimpulan** bahwa tabel performa_kimia_farma_final **tidak mempunyai missing value dan data duplikat**. Oleh karena itu, tabel ini selanjutnya bisa diolah di Looker Studio untuk dijadikan dashbooard.
 ```
--- Mengecek missing value tabel peforma_kimia_farma_2
+-- Mengecek missing value tabel peforma_kimia_farma_final
 
 SELECT 
   COUNT(*) AS total_rows,
@@ -271,11 +279,11 @@ SELECT
   COUNTIF(nett_profit IS NULL) AS missing_nett_profit,
   COUNTIF(rating_transaksi IS NULL) AS missing_rating_transaksi,
   
-FROM `rakamin-kf-analytics-453103.kimia_farma.performa_kimia_farma_2` 
+FROM `rakamin-kf-analytics-453103.kimia_farma.performa_kimia_farma_final` 
 ```
 
 ```
--- Mengecek data duplikat tabel peforma_kimia_farma_2
+-- Mengecek data duplikat tabel peforma_kimia_farma_final
 
 SELECT 
     transaction_id, date, branch_id, branch_name, provinsi, kota, 
@@ -320,11 +328,13 @@ ORDER BY duplicate_count DESC;
 
 ## Hasil
 Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berikut ini.
-![Dashboard_Kimia_Farma (4)](https://github.com/user-attachments/assets/b8f5d33e-57a9-4752-9936-1cb44cc694dd)
+
+![Dashboard_Kimia_Farma (5)](https://github.com/user-attachments/assets/5a54e6e7-b40b-4c61-814c-da7898272cb3)
+
 
 ## Temuan Utama dan/atau Rekomendasi 
 
-### Tren Total Pendapatan Kotor, Pendapatan Bersih, Laba Beris
+### Tren Total Pendapatan Kotor, Pendapatan Bersih, Laba Bersih
 - **Temuan:**
    - Pendapatan Kotor dan Bersih
 
@@ -334,7 +344,7 @@ Dihasilkan dashboard analasis perrforma bisnis kimia farma tahun 2020-2023 berik
 
   - Laba Bersih
 
-       - Laba bersih tercatat 91,2 miliar, yang berarti margin laba bersih sekitar 28,4% dari pendapatan bersih.
+       - Laba bersih tercatat 65,2 miliar, yang berarti margin laba bersih sekitar 19,5% dari pendapatan bersih.
        - Ini adalah indikator profitabilitas yang cukup baik, namun perlu dievaluasi lebih lanjut apakah ada potensi peningkatan efisiensi biaya.
 
        
